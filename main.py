@@ -195,9 +195,8 @@ def draw_scene():
 
     # Draw scene elements in the foreground
     draw_realistic_tree(context, globe_x + 90, globe_y + 120, 90)  # Right tree, moved forward
-    draw_realistic_tree(context, globe_x - 90, globe_y + 90, 80)  # Left tree
-    draw_realistic_tree(context, globe_x - 60, globe_y + 60, 70)  # Left tree
-    draw_snowman(context, globe_x, globe_y + 20)
+
+   # draw_snowman(context, globe_x, globe_y + 20)
 
     # Falling snow
     for _ in range(40):
