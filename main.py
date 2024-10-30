@@ -13,6 +13,7 @@ def draw_circle(ctx, x, y, radius, color):
     ctx.fill()
 
 
+
 def draw_realistic_tree(ctx, x, y, height):
     # Draw trunk
     trunk_width = height * 0.1
@@ -57,31 +58,30 @@ def draw_realistic_tree(ctx, x, y, height):
             draw_circle(ctx, dec_x - 1, dec_y - 1, 1, (1, 0.8, 0.8))
 
 
+def draw_house(ctx, x, y, width, height):
+    # Draw house body
+    ctx.rectangle(x - width / 2, y, width, height)
+    ctx.set_source_rgb(0.55, 0.27, 0.07)  # Brown color for the house body
+    ctx.fill()
+
+    # Draw roof
+    ctx.move_to(x - width / 2, y)
+    ctx.line_to(x, y - height / 2)
+    ctx.line_to(x + width / 2, y)
+    ctx.close_path()
+    ctx.set_source_rgb(0.4, 0.2, 0.1)  # Darker brown for the roof
+    ctx.fill()
 
 
 def draw_sky(ctx):
-    # Rich blue background
     ctx.set_source_rgb(0.15, 0.4, 0.8)
     ctx.paint()
 
-    # Add stars
     for _ in range(30):
         x = random.uniform(0, WIDTH)
         y = random.uniform(0, HEIGHT)
         size = random.uniform(1, 3)
         draw_circle(ctx, x, y, size, (1, 1, 1))
-
-    # Feature star
-    ctx.save()
-    ctx.translate(WIDTH - 100, 80)
-    for i in range(8):
-        ctx.move_to(0, 0)
-        ctx.line_to(0, 15)
-        ctx.rotate(math.pi / 4)
-    ctx.set_source_rgb(1, 1, 1)
-    ctx.set_line_width(2)
-    ctx.stroke()
-    ctx.restore()
 
 
 def draw_snow_globe(ctx, x, y, radius):
@@ -96,36 +96,9 @@ def draw_snow_globe(ctx, x, y, radius):
     ctx.set_line_width(3)
     ctx.stroke()
 
-    # Highlights
     ctx.arc(x - radius * 0.6, y - radius * 0.6, radius * 0.1, 0, 2 * math.pi)
     ctx.set_source_rgb(1, 1, 1)
     ctx.fill()
-
-
-def draw_snowman(ctx, x, y):
-    # Body
-    draw_circle(ctx, x, y + 30, 25, (1, 1, 1))
-    draw_circle(ctx, x, y, 20, (1, 1, 1))
-    draw_circle(ctx, x, y - 30, 15, (1, 1, 1))
-
-    # Hat
-    ctx.rectangle(x - 12, y - 55, 24, 15)
-    ctx.rectangle(x - 15, y - 42, 30, 5)
-    ctx.set_source_rgb(0, 0, 0)
-    ctx.fill()
-
-    # Face
-    draw_circle(ctx, x - 5, y - 33, 2, (0, 0, 0))
-    draw_circle(ctx, x + 5, y - 33, 2, (0, 0, 0))
-
-    # Arms
-    ctx.set_source_rgb(0.3, 0.2, 0.1)
-    ctx.set_line_width(2)
-    ctx.move_to(x - 25, y)
-    ctx.line_to(x - 40, y - 15)
-    ctx.move_to(x + 25, y)
-    ctx.line_to(x + 40, y - 15)
-    ctx.stroke()
 
 
 def draw_holly(ctx, x, y):
@@ -143,62 +116,31 @@ def draw_holly(ctx, x, y):
     for bx, by in positions:
         draw_circle(ctx, bx, by, 4, (0.9, 0, 0))
 
-def draw_curvy_mountain(ctx, x, y, width, height, peaks=3):
-    # Set color for the mountain - dark grey
-    ctx.set_source_rgb(0.3, 0.3, 0.3)
-
-    # Start drawing from the left base of the mountain
-    ctx.move_to(x - width / 2, y)
-
-    # Loop to create each peak using Bezier curves
-    for i in range(peaks):
-        peak_x = x - width / 2 + (i + 0.5) * (width / peaks)  # x position for each peak
-        valley_x = x - width / 2 + (i + 1) * (width / peaks)  # x position for the valley after each peak
-
-        # Control points create the curves; adjust y control points for more smoothness
-        ctx.curve_to(peak_x - width / (4 * peaks), y - height * 0.7,
-                     peak_x + width / (4 * peaks), y - height * 0.7,
-                     valley_x, y)
-
-    # Complete the mountain shape down to the base
-    ctx.line_to(x + width / 2, y)
-    ctx.line_to(x - width / 2, y)
-    ctx.close_path()
-    ctx.fill()
-
-
 
 def draw_scene():
-    # Clear canvas
     context.set_source_rgb(1, 1, 1)
     context.paint()
 
-    # Draw sky
     draw_sky(context)
 
-    # Set up snow globe
     globe_x, globe_y = WIDTH // 2, HEIGHT // 2 - 50
     globe_radius = 150
 
-    # Clip for snow globe contents
     context.save()
     context.arc(globe_x, globe_y, globe_radius, 0, 2 * math.pi)
     context.clip()
 
-    # Snowy ground
     context.rectangle(globe_x - globe_radius, globe_y - 20, globe_radius * 2, globe_radius * 1.5)
     context.set_source_rgb(1, 1, 1)
     context.fill()
 
-    # Draw mountains (moved to the back and colored dark grey)
+    draw_realistic_tree(context, globe_x + 90, globe_y + 120, 90)
 
+    # Draw three houses with brown color and different positions
+    draw_house(context, globe_x - 60, globe_y + 80, 30, 30)
+    draw_house(context, globe_x + 20, globe_y + 80, 30, 30)
+    draw_house(context, globe_x - 10, globe_y + 110, 30, 30)
 
-    # Draw scene elements in the foreground
-    draw_realistic_tree(context, globe_x + 90, globe_y + 120, 90)  # Right tree, moved forward
-
-   # draw_snowman(context, globe_x, globe_y + 20)
-
-    # Falling snow
     for _ in range(40):
         x = random.uniform(globe_x - globe_radius * 0.9, globe_x + globe_radius * 0.9)
         y = random.uniform(globe_y - globe_radius * 0.9, globe_y + globe_radius * 0.9)
@@ -206,21 +148,17 @@ def draw_scene():
 
     context.restore()
 
-    # Draw snow globe
     draw_snow_globe(context, globe_x, globe_y, globe_radius)
 
-    # Base
     context.rectangle(globe_x - globe_radius * 0.4, globe_y + globe_radius, globe_radius * 0.8, 30)
     context.set_source_rgb(0, 0, 0)
     context.fill()
 
-    # Holly decorations
     draw_holly(context, 100, HEIGHT - 100)
     draw_holly(context, WIDTH - 100, HEIGHT - 100)
 
-    # Save the image
-    surface.write_to_png("snow_globe_realistic_tree.png")
+    surface.write_to_png("snow_globe_with_houses.png")
 
-# Generate the updated image
+# Generate the image
 draw_scene()
-print("Snow globe with mountain moved to the back and dark grey color applied!")
+print("Snow globe with three small brown houses added!")
