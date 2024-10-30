@@ -100,6 +100,41 @@ def draw_snow_globe(ctx, x, y, radius):
     ctx.set_source_rgb(1, 1, 1)
     ctx.fill()
 
+#draw a snowman
+def draw_snowman(ctx, x, y):
+    # Body
+    draw_circle(ctx, x, y, 20, (1, 1, 1))  # Bottom circle
+    draw_circle(ctx, x, y - 30, 15, (1, 1, 1))  # Middle circle
+    draw_circle(ctx, x, y - 50, 10, (1, 1, 1))  # Head
+
+    # Eyes
+    draw_circle(ctx, x - 3, y - 52, 1.5, (0, 0, 0))  # Left eye
+    draw_circle(ctx, x + 3, y - 52, 1.5, (0, 0, 0))  # Right eye
+
+    # Nose
+    ctx.move_to(x, y - 45)
+    ctx.line_to(x + 8, y - 45)
+    ctx.set_source_rgb(1, 0.5, 0)  # Orange for carrot nose
+    ctx.set_line_width(2)
+    ctx.stroke()
+
+    # Buttons on the chest
+    button_y_positions = [y - 30, y - 20, y - 10]  # Vertical positions for buttons
+    for pos in button_y_positions:
+        draw_circle(ctx, x, pos, 1.5, (0, 0, 0))  # Draw buttons
+
+    # Arms (lines extending from the middle circle)
+    ctx.set_line_width(2)
+    # Left arm
+    ctx.move_to(x - 15, y - 30)  # Starting point of left arm
+    ctx.line_to(x - 30, y - 25)  # Ending point of left arm
+    ctx.stroke()
+
+    # Right arm
+    ctx.move_to(x + 15, y - 30)  # Starting point of right arm
+    ctx.line_to(x + 30, y - 25)  # Ending point of right arm
+    ctx.stroke()
+
 
 def draw_holly(ctx, x, y):
     for angle in [-0.3, 0.3]:
@@ -130,16 +165,19 @@ def draw_scene():
     context.arc(globe_x, globe_y, globe_radius, 0, 2 * math.pi)
     context.clip()
 
-    context.rectangle(globe_x - globe_radius, globe_y - 20, globe_radius * 2, globe_radius * 1.5)
-    context.set_source_rgb(1, 1, 1)
+    context.rectangle(globe_x - globe_radius, globe_y - 5, globe_radius * 2, globe_radius * 1.5)
+    context.set_source_rgb(0.941, 1.0, 1.0)
     context.fill()
 
     draw_realistic_tree(context, globe_x + 90, globe_y + 120, 90)
 
-    # Draw three houses with brown color and different positions
+    # Draw  houses with brown color and different positions
     draw_house(context, globe_x - 60, globe_y + 80, 30, 30)
     draw_house(context, globe_x + 20, globe_y + 80, 30, 30)
+    draw_house(context, globe_x +50, globe_y +60, 30, 30)
     draw_house(context, globe_x - 10, globe_y + 110, 30, 30)
+    draw_house(context, globe_x + 50, globe_y + 90, 30, 30)
+    draw_house(context, globe_x - 100, globe_y + 60, 40, 80)
 
     for _ in range(40):
         x = random.uniform(globe_x - globe_radius * 0.9, globe_x + globe_radius * 0.9)
@@ -149,6 +187,9 @@ def draw_scene():
     context.restore()
 
     draw_snow_globe(context, globe_x, globe_y, globe_radius)
+    draw_snowman(context, WIDTH // 2, 300)
+    #draw_snowman(context, WIDTH // 2, 250)
+
 
     context.rectangle(globe_x - globe_radius * 0.4, globe_y + globe_radius, globe_radius * 0.8, 30)
     context.set_source_rgb(0, 0, 0)
