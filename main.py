@@ -2,6 +2,7 @@ import math
 import cairo
 import random
 
+
 WIDTH, HEIGHT = 600, 600
 surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, WIDTH, HEIGHT)
 context = cairo.Context(surface)
@@ -151,6 +152,24 @@ def draw_holly(ctx, x, y):
     for bx, by in positions:
         draw_circle(ctx, bx, by, 4, (0.9, 0, 0))
 
+def draw_mountains(ctx, globe_x, globe_y, globe_radius):
+    peak_points = []
+    num_peaks = 10
+    start_x = globe_x - globe_radius
+    end_x = globe_x + globe_radius
+
+    for i in range(num_peaks):
+        x = start_x + i * ((end_x - start_x) / (num_peaks - 1))
+        y = globe_y + 20 - random.uniform(15, 30)
+        peak_points.append((x, y))
+
+    ctx.move_to(start_x, globe_y + 20)
+    for x, y in peak_points:
+        ctx.line_to(x, y)
+    ctx.line_to(end_x, globe_y + 20)
+    ctx.close_path()
+    ctx.set_source_rgb(0.8, 0.9, 1)  # Light blueish-white color
+    ctx.fill()
 
 def draw_scene():
     context.set_source_rgb(1, 1, 1)
@@ -164,6 +183,17 @@ def draw_scene():
     context.save()
     context.arc(globe_x, globe_y, globe_radius, 0, 2 * math.pi)
     context.clip()
+
+    draw_mountains(context, globe_x, globe_y, globe_radius)
+
+    context.move_to(globe_x - globe_radius, globe_y + 20)
+    context.curve_to(globe_x - globe_radius * 0.5, globe_y - 10,globe_x + globe_radius * 0.5, globe_y - 10,
+                     globe_x + globe_radius, globe_y + 20)
+    context.line_to(globe_x + globe_radius, globe_y + globe_radius * 1.5)
+    context.line_to(globe_x - globe_radius, globe_y + globe_radius * 1.5)
+    context.close_path()
+    context.set_source_rgb(1, 1, 1)  # Pure white for the hilly curve
+    context.fill()
 
     context.rectangle(globe_x - globe_radius, globe_y - 5, globe_radius * 2, globe_radius * 1.5)
     context.set_source_rgb(0.941, 1.0, 1.0)
